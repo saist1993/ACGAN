@@ -2,6 +2,7 @@ from __future__ import print_function
 import argparse
 import os
 import random
+import pickle
 import torch
 import torch.nn as nn
 import torch.nn.parallel
@@ -282,13 +283,13 @@ for epoch in range(opt.niter):
                     normalize=True)
 
     # do checkpointing
-    disc_loss.append(reduce(lambda x, y: x + y, disc_iter_loss) / len(disc_iter_loss))
-    gen_loss.append(reduce(lambda x, y: x + y, gen_iter_loss) / len(gen_iter_loss))
+    disc_loss.append(reduce(lambda x, y: x + y, disc_iter_loss) / len(disc_iter_loss)*1.0)
+    gen_loss.append(reduce(lambda x, y: x + y, gen_iter_loss) / len(gen_iter_loss)*1.0)
     torch.save(netG.state_dict(), '%s/netG_epoch_%d.pth' % (opt.outf, epoch))
     torch.save(netD.state_dict(), '%s/netD_epoch_%d.pth' % (opt.outf, epoch))
 
-print("the loss of discriminator : %d" %(disc_loss[-1]))
-print("the loss of generator : %d" %(gen_loss[-1]))
+print("the loss of discriminator : %.4f" %(disc_loss[-1]))
+print("the loss of generator : %.4f" %(gen_loss[-1]))
 pickle.dump(disc_loss,'%s/disc_loss.pickle' % (opt.outf))
 pickle.dump(gen_loss,'%s/gen_loss.pickle' % (opt.outf))
 
