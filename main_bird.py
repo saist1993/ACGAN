@@ -290,6 +290,6 @@ for epoch in range(opt.niter):
 
 print("the loss of discriminator : %.4f" %(disc_loss[-1]))
 print("the loss of generator : %.4f" %(gen_loss[-1]))
-pickle.dump(disc_loss,'%s/disc_loss.pickle' % (opt.outf))
-pickle.dump(gen_loss,'%s/gen_loss.pickle' % (opt.outf))
+pickle.dump(disc_loss,open('%s/disc_loss.pickle' % (opt.outf),"w+"))
+pickle.dump(gen_loss,open('%s/gen_loss.pickle' % (opt.outf),"w+"))
 
