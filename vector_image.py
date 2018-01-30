@@ -14,7 +14,7 @@ import torchvision.utils as vutils
 from torch.autograd import Variable
 import numpy as np
 import PIL
-
+from PIL import Image
 
 ngpu = 0
 nz = 100
@@ -23,8 +23,8 @@ ndf = 64
 nc = 3
 lr = 0.0002
 beta1 = 0.5
-netD_loc = 'netD_epoch_23.pth'
-netG_loc = 'netG_epoch_23.pth'
+netD_loc = 'netD_epoch_24.pth'
+netG_loc = 'netG_epoch_24.pth'
 batchSize = 1
 imageSize = 64
 
@@ -259,3 +259,6 @@ def save_large_image():
 	images = map(PIL.Image.open, ['combined.png', 'image_final.png'])
 	combo_1 = append_images(images, direction='horizontal')
 	combo_1.save('final_conc.png')
+
+Vector_arith()
+save_large_image()

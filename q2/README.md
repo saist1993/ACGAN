@@ -1,0 +1,2 @@
+# ACGAN
+The folder contains the trained discriminator and generator model file. It also contains the generated images and the real image sample. The dataset used for the training GAN was Church outdoor.
