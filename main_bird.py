@@ -30,10 +30,17 @@ parser.add_argument('--cuda', action='store_true', help='enables cuda')
 parser.add_argument('--ngpu', type=int, default=1, help='number of GPUs to use')
 parser.add_argument('--netG', default='', help="path to netG (to continue training)")
 parser.add_argument('--netD', default='', help="path to netD (to continue training)")
-parser.add_argument('--outf', default='./bird_model', help='folder to output images and model checkpoints')
+parser.add_argument('--outf', default='./bird_model_v2', help='folder to output images and model checkpoints')
 parser.add_argument('--manualSeed', type=int, help='manual seed')
 parser.add_argument('--gpuid', default=0,type=int, help='specify which specific gpu to use')
 
+
+'''
+    Avg loss for generator and discriminator
+'''
+
+gen_loss = []
+disc_loss = []
 
 opt = parser.parse_args()
 print(opt)
@@ -210,6 +217,8 @@ optimizerD = optim.Adam(netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 optimizerG = optim.Adam(netG.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
 
 for epoch in range(opt.niter):
+    gen_iter_loss = []
+    disc_iter_loss = []
     for i, data in enumerate(dataloader, 0):
         ############################
         # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
@@ -261,6 +270,8 @@ for epoch in range(opt.niter):
         print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f D(x): %.4f D(G(z)): %.4f / %.4f'
               % (epoch, opt.niter, i, len(dataloader),
                  errD.data[0], errG.data[0], D_x, D_G_z1, D_G_z2))
+        gen_iter_loss.append(errG.data[0])
+        disc_iter_loss.append(errD.data[0])
         if i % 100 == 0:
             vutils.save_image(real_cpu,
                     '%s/real_samples.png' % opt.outf,
@@ -271,5 +282,13 @@ for epoch in range(opt.niter):
                     normalize=True)
 
     # do checkpointing
+    disc_loss.append(reduce(lambda x, y: x + y, disc_iter_loss) / len(disc_iter_loss))
+    gen_loss.append(reduce(lambda x, y: x + y, gen_iter_loss) / len(gen_iter_loss))
     torch.save(netG.state_dict(), '%s/netG_epoch_%d.pth' % (opt.outf, epoch))
     torch.save(netD.state_dict(), '%s/netD_epoch_%d.pth' % (opt.outf, epoch))
+
+print("the loss of discriminator : %d" %(disc_loss[-1]))
+print("the loss of generator : %d" %(gen_loss[-1]))
+pickle.dump(disc_loss,'%s/disc_loss.pickle' % (opt.outf))
+pickle.dump(gen_loss,'%s/gen_loss.pickle' % (opt.outf))
+
