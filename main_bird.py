@@ -32,7 +32,7 @@ parser.add_argument('--netG', default='', help="path to netG (to continue traini
 parser.add_argument('--netD', default='', help="path to netD (to continue training)")
 parser.add_argument('--outf', default='./bird_model', help='folder to output images and model checkpoints')
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--gpuid', default=1,type=int, help='specify which specific gpu to use')
+parser.add_argument('--gpuid', default=0,type=int, help='specify which specific gpu to use')
 
 
 opt = parser.parse_args()

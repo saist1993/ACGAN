@@ -32,7 +32,7 @@ parser.add_argument('--netG', default='./imagenet_model/netG_epoch_2.pth', help=
 parser.add_argument('--netD', default='./imagenet_model/netD_epoch_2.pth', help="path to netD (to continue training)")
 parser.add_argument('--outf', default='./imagenet_model', help='folder to output images and model checkpoints')
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--gpuid', type=int, help='specify which specific gpu to use')
+parser.add_argument('--gpuid', default=0 , type=int, help='specify which specific gpu to use')
 
 
 opt = parser.parse_args()
